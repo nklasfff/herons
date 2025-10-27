@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>HERONS - La Familia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .phone {
+            width: 393px;
+            height: 852px;
+            background: #000;
+            border-radius: 47px;
+            box-shadow: 0 0 0 14px #1d1d1f, 0 30px 80px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Dynamic Island */
+        .island {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 1000;
+        }
+        
+        /* Status Bar */
+        .status {
+            height: 54px;
+            background: #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 24px 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #FFB3D9;
+            flex-shrink: 0;
+        }
+        
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow: hidden;
+            background: #2a2a2a;
+            position: relative;
+        }
+        
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px 16px 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: #2a2a2a;
+        }
+        
+        .screen.active {
+            transform: translateX(0);
+        }
+        
+        .screen.out {
+            transform: translateX(-100%);
+        }
+        
+        /* Hide scrollbar */
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Content spacer to prevent hiding under tab bar */
+        .content-spacer {
+            height: 100px;
+            flex-shrink: 0;
+        }
+        
+        /* Tab Bar */
+        .tabs {
+            height: 83px;
+            background: #2a2a2a;
+            backdrop-filter: blur(20px);
+            border-top: 0.5px solid #FFB3D9;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 16px;
+            flex-shrink: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+        }
+        
+        .tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            text-decoration: none;
+        }
+        
+        .tab.active {
+            opacity: 1;
+        }
+        
+        .tab-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .tab.active .tab-icon {
+            background: #FFB3D9;
+        }
+        
+        .tab-label {
+            font-size: 11px;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 0.5px solid #FFB3D9;
+        }
+        
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #FFB3D9;
+        }
+        
+        .logo-subtitle {
+            font-size: 11px;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        
+        .messi-badge {
+            width: 50px;
+            height: 50px;
+            background: #FFB3D9;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .messi-number {
+            font-size: 24px;
+            color: #000;
+            line-height: 1;
+        }
+        
+        .messi-name {
+            font-size: 8px;
+            color: #000;
+            letter-spacing: 1px;
+        }
+        
+        /* Sections */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .welcome-label {
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        
+        .welcome-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #FFB3D9;
+            letter-spacing: 2px;
+        }
+        
+        .welcome-subtitle {
+            font-size: 11px;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+        
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .tile {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tile:active {
+            transform: scale(0.95);
+            background: #252525;
+        }
+        
+        .tile-icon {
+            font-size: 36px;
+        }
+        
+        .tile-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        
+        .tile-subtitle {
+            font-size: 10px;
+            color: #999;
+        }
+        
+        /* Collections */
+        .section-header {
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .collection-item {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .collection-item:active {
+            transform: scale(0.98);
+            background: #252525;
+        }
+        
+        .collection-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .collection-info {
+            flex: 1;
+        }
+        
+        .collection-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        
+        .collection-subtitle {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .collection-arrow {
+            color: #666;
+            font-size: 18px;
+        }
+        
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #FFB3D9 0%, #FF8CB3 100%);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .hero-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .hero-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .hero-subtitle {
+            font-size: 11px;
+            color: #fff;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+        
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            top: 58px;
+            left: 20px;
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 179, 217, 0.15);
+            border: 1px solid rgba(255, 179, 217, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 16px;
+            color: #FFB3D9;
+            transition: all 0.2s;
+        }
+        
+        .back-button:active {
+            transform: scale(0.9);
+            background: rgba(255, 179, 217, 0.25);
+        }
+        
+        /* Content Cards */
+        .content-card {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .card-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .card-body {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .card-footer {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #3a3a3a;
+        }
+        
+        .card-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-box {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFB3D9;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Chapter Cards */
+        .chapter-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        
+        .chapter-card.barcelona {
+            border-color: #E63946;
+        }
+        
+        .chapter-card.argentina {
+            border-color: #75C9FF;
+        }
+        
+        .chapter-card.miami {
+            border-color: #FFB3D9;
+        }
+        
+        .chapter-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .chapter-icon {
+            font-size: 32px;
+        }
+        
+        .chapter-info {
+            flex: 1;
+        }
+        
+        .chapter-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .chapter-years {
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 1px;
+        }
+        
+        .chapter-stats {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        /* MMM List */
+        .mmm-item {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+        
+        .mmm-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .mmm-thumb {
+            width: 60px;
+            height: 60px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .mmm-info {
+            flex: 1;
+        }
+        
+        .mmm-match {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .mmm-user {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 6px;
+        }
+        
+        .mmm-text {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        /* Buttons */
+        .button {
+            background: #FFB3D9;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 700;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .button:active {
+            transform: scale(0.98);
+            opacity: 0.8;
+        }
+        
+        /* Share Options */
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .share-icon {
+            width: 56px;
+            height: 56px;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .share-label {
+            font-size: 11px;
+            color: #fff;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+        
+        .action-button {
+            background: #FFB3D9;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .action-button-icon {
+            font-size: 24px;
+        }
+        
+        .action-button-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        /* Collections Grid */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .collection-tile {
+            background: #1a1a1a;
+            border: 2px solid;
+            border-radius: 16px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .collection-tile.yellow {
+            border-color: #FFD700;
+        }
+        
+        .collection-tile.red {
+            border-color: #FF4444;
+        }
+        
+        .collection-tile.blue {
+            border-color: #4A90E2;
+        }
+        
+        .collection-tile.green {
+            border-color: #50C878;
+        }
+        
+        .collection-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FFB3D9;
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+        
+        /* Archive Banner */
+        .archive-banner {
+            background: #FFB3D9;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin: 24px 0;
+        }
+        
+        .archive-icon-text {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .archive-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        
+        .archive-stats {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .search-button {
+            width: 56px;
+            height: 56px;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Chat Message */
+        .chat-header {
+            background: #FFB3D9;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .chat-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 4px;
+        }
+        
+        .chat-subtitle {
+            font-size: 11px;
+            color: #000;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        
+        .message {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            background: #FFB3D9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .message-user {
+            flex: 1;
+        }
+        
+        .message-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .message-text {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        
+        .message-reactions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .reaction {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        
+        /* Gear Shop */
+        .gear-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .gear-item {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .gear-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #FFD700;
+            color: #000;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        
+        .gear-image {
+            width: 100%;
+            height: 120px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .gear-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .gear-desc {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        
+        .gear-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #FFB3D9;
+        }
+        
+        /* Info Cards */
+        .info-card {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .info-icon {
+            font-size: 32px;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* Highlight Banner */
+        .highlight-banner {
+            background: #FFB3D9;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .highlight-label {
+            display: inline-block;
+            background: rgba(0,0,0,0.1);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-text {
+            font-size: 12px;
+            color: #000;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        .highlight-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .highlight-stat-small {
+            font-size: 11px;
+            color: #000;
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 420px) {
+            .phone {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="island"></div>
+        
+        <div class="status">
+            <span>9:41</span>
+            <span>100%</span>
+        </div>
+        
+        <div class="content">
+            <!-- HOME SCREEN -->
+            <div id="home" class="screen active">
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="welcome-section">
+                    <div class="welcome-label">WELCOME HOME</div>
+                    <div class="welcome-title">VICE CITY</div>
+                    <div class="welcome-subtitle">WHERE MAGIC HAPPENS</div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="tile" onclick="navigateTo('highlights')">
+                        <div class="tile-icon">⚽</div>
+                        <div class="tile-title">HIGHLIGHTS</div>
+                        <div class="tile-subtitle">Latest moments</div>
+                    </div>
+                    
+                    <div class="tile" onclick="navigateTo('chat')">
+                        <div class="tile-icon">💬</div>
+                        <div class="tile-title">CHAT</div>
+                        <div class="tile-subtitle">La Familia</div>
+                    </div>
+                    
+                    <div class="tile" onclick="navigateTo('playoffs')">
+                        <div class="tile-icon">🏆</div>
+                        <div class="tile-title">PLAYOFFS</div>
+                        <div class="tile-subtitle">Road to glory</div>
+                    </div>
+                    
+                    <div class="tile" onclick="navigateTo('archive')">
+                        <div class="tile-icon">📚</div>
+                        <div class="tile-title">ARCHIVE</div>
+                        <div class="tile-subtitle">All memories</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">✨ SPECIAL COLLECTIONS</div>
+                
+                <div class="collection-item" onclick="navigateTo('mmm')">
+                    <div class="collection-icon">🔥</div>
+                    <div class="collection-info">
+                        <div class="collection-title">M.M.M.</div>
+                        <div class="collection-subtitle">Miami Magic Moments</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="collection-item" onclick="navigateTo('bam')">
+                    <div class="collection-icon">🐐</div>
+                    <div class="collection-info">
+                        <div class="collection-title">B.A.M.</div>
+                        <div class="collection-subtitle">Barcelona • Argentina • Miami</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="collection-item" onclick="navigateTo('goat')">
+                    <div class="collection-icon">👑</div>
+                    <div class="collection-info">
+                        <div class="collection-title">THE GOAT</div>
+                        <div class="collection-subtitle">Messi's Complete Journey</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- HIGHLIGHTS SCREEN -->
+            <div id="highlights" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="highlight-banner">
+                    <div class="highlight-label">⚽ MATCH HIGHLIGHTS</div>
+                    <div class="highlight-title">Messi Free Kick vs Columbus 🔥</div>
+                    <div class="highlight-text">Lucas: Bro that curve was absolutely INSANE!!<br>Noah: GOAT status confirmed 🐐 no debate</div>
+                    <div class="highlight-footer">
+                        <span class="highlight-stat-small">32 new • 418 saved</span>
+                        <span class="highlight-stat-small">32</span>
+                    </div>
+                </div>
+                
+                <div class="section-header">YOUR COLLECTIONS</div>
+                
+                <div class="collections-grid">
+                    <div class="collection-tile yellow" onclick="navigateTo('messi-collection')">
+                        <div class="collection-count">31</div>
+                        <div class="tile-icon">🐐</div>
+                        <div class="tile-title">MESSI</div>
+                    </div>
+                    
+                    <div class="collection-tile red">
+                        <div class="collection-count">24</div>
+                        <div class="tile-icon">⚽</div>
+                        <div class="tile-title">GOALS</div>
+                    </div>
+                    
+                    <div class="collection-tile blue">
+                        <div class="collection-count">16</div>
+                        <div class="tile-icon">🏆</div>
+                        <div class="tile-title">MATCHES</div>
+                    </div>
+                    
+                    <div class="collection-tile yellow">
+                        <div class="tile-icon">📊</div>
+                        <div class="tile-title">STATS</div>
+                    </div>
+                    
+                    <div class="collection-tile red">
+                        <div class="collection-count">9</div>
+                        <div class="tile-icon">👕</div>
+                        <div class="tile-title">GEAR</div>
+                    </div>
+                    
+                    <div class="collection-tile green">
+                        <div class="tile-icon">🎮</div>
+                        <div class="tile-title">FIFA</div>
+                    </div>
+                </div>
+                
+                <div class="archive-banner">
+                    <div class="archive-icon-text">⚽ YOUR ARCHIVE</div>
+                    <div class="archive-title">YOUR ARCHIVE</div>
+                    <div class="archive-stats">847 moments • 42 new today</div>
+                </div>
+                
+                <div class="search-bar">
+                    <div class="search-button">🔍</div>
+                    <div class="search-button">📁</div>
+                    <div class="search-button">⭐</div>
+                </div>
+                
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- MMM SCREEN -->
+            <div id="mmm" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="hero-banner">
+                    <div class="hero-title">M M M</div>
+                    <div class="hero-subtitle">MY MESSI MOMENT</div>
+                </div>
+                
+                <div class="section-header">RECENT MOMENTS</div>
+                
+                <div class="mmm-item">
+                    <div class="mmm-header">
+                        <div class="mmm-thumb">⚽</div>
+                        <div class="mmm-info">
+                            <div class="mmm-match">VS COLUMBUS • FREE KICK</div>
+                            <div class="mmm-user">Diego: 4 minutes left, we were losing. Then BOOM. I woke up the whole neighborhood screaming...</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stat">❤️ 247</div>
+                        <div class="card-stat">💬 18</div>
+                        <div class="card-stat">2h ago</div>
+                    </div>
+                </div>
+                
+                <div class="mmm-item">
+                    <div class="mmm-header">
+                        <div class="mmm-thumb">🎯</div>
+                        <div class="mmm-info">
+                            <div class="mmm-match">VS ATLANTA • ASSIST</div>
+                            <div class="mmm-user">Maria: That through ball was INSANE. My son couldn't believe what he just saw. Pure magic...</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stat">❤️ 189</div>
+                        <div class="card-stat">💬 12</div>
+                        <div class="card-stat">5h ago</div>
+                    </div>
+                </div>
+                
+                <div class="mmm-item">
+                    <div class="mmm-header">
+                        <div class="mmm-thumb">🔥</div>
+                        <div class="mmm-info">
+                            <div class="mmm-match">VS NASHVILLE • SOLO GOAL</div>
+                            <div class="mmm-user">Lucas: He took on 4 defenders like they weren't even there. This is why he's the GOAT...</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stat">❤️ 412</div>
+                        <div class="card-stat">💬 34</div>
+                        <div class="card-stat">Yesterday</div>
+                    </div>
+                </div>
+                
+                <div class="mmm-item">
+                    <div class="mmm-header">
+                        <div class="mmm-thumb">⭐</div>
+                        <div class="mmm-info">
+                            <div class="mmm-match">VS ORLANDO • HAT-TRICK</div>
+                            <div class="mmm-user">Sofia: First game with my dad at the stadium. He scored 3 times. I'll never forget this night...</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stat">❤️ 623</div>
+                        <div class="card-stat">💬 45</div>
+                        <div class="card-stat">3 days ago</div>
+                    </div>
+                </div>
+                
+                <div class="mmm-item">
+                    <div class="mmm-header">
+                        <div class="mmm-thumb">🐐</div>
+                        <div class="mmm-info">
+                            <div class="mmm-match">VS LAFC • PLAYOFF WINNER</div>
+                            <div class="mmm-user">Jake: 90th minute. Overtime. Then HE does it. Best moment of my life as a Miami fan...</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stat">❤️ 1.2K</div>
+                        <div class="card-stat">💬 89</div>
+                        <div class="card-stat">1 week ago</div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- CHAT SCREEN -->
+            <div id="chat" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="chat-header">
+                    <div class="chat-title">💬 FAMILY CHAT</div>
+                    <div class="chat-subtitle">YOUR MIAMI CREW • 6 MEMBERS</div>
+                </div>
+                
+                <div class="section-header">ACTIVE NOW</div>
+                
+                <div class="message">
+                    <div class="message-header">
+                        <div class="message-avatar">🔥</div>
+                        <div class="message-user">
+                            <div class="message-name">DIEGO</div>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                    <div class="message-text">BRO DID YOU JUST SEE THAT FREE KICK?? I literally screamed so loud my neighbor came over! That curve was INSANE! 🚀</div>
+                    <div class="message-reactions">
+                        <div class="reaction">🔥 12</div>
+                        <div class="reaction">😱 8</div>
+                        <div class="reaction">🐐 15</div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-header">
+                        <div class="message-avatar">⚡</div>
+                        <div class="message-user">
+                            <div class="message-name">MARIA</div>
+                        </div>
+                        <div class="message-time">2 min ago</div>
+                    </div>
+                    <div class="message-text">89th minute. Down 2-1. And HE delivers. Again. This man is not human!! 😱</div>
+                    <div class="message-reactions">
+                        <div class="reaction">❤️ 9</div>
+                        <div class="reaction">🙌 6</div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-header">
+                        <div class="message-avatar">⭐</div>
+                        <div class="message-user">
+                            <div class="message-name">LUCAS</div>
+                        </div>
+                        <div class="message-time">5 min ago</div>
+                    </div>
+                    <div class="message-text">Already added to my MMM collection. That's going straight to the top! Best moment of the season so far 🏆</div>
+                    <div class="message-reactions">
+                        <div class="reaction">🔥 4</div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-header">
+                        <div class="message-avatar">💖</div>
+                        <div class="message-user">
+                            <div class="message-name">SOFIA</div>
+                        </div>
+                        <div class="message-time">8 min ago</div>
+                    </div>
+                    <div class="message-text"></div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- BAM SCREEN -->
+            <div id="bam" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="hero-banner">
+                    <div class="hero-title">B.A.M.</div>
+                    <div class="hero-subtitle">THE COMPLETE LEGACY</div>
+                </div>
+                
+                <div class="section-header">THREE LEGENDARY CHAPTERS</div>
+                
+                <div class="chapter-card barcelona">
+                    <div class="chapter-header">
+                        <div class="chapter-icon">🔴</div>
+                        <div class="chapter-info">
+                            <div class="chapter-name">BARCELONA</div>
+                            <div class="chapter-years">2004-2021 • 17 SEASONS</div>
+                        </div>
+                        <div class="collection-arrow">›</div>
+                    </div>
+                    <div class="chapter-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">672</div>
+                            <div class="stat-label">GOALS</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">303</div>
+                            <div class="stat-label">ASSISTS</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">35</div>
+                            <div class="stat-label">TROPHIES</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter-card argentina">
+                    <div class="chapter-header">
+                        <div class="chapter-icon">🇦🇷</div>
+                        <div class="chapter-info">
+                            <div class="chapter-name">ARGENTINA</div>
+                            <div class="chapter-years">2005-PRESENT • NATIONAL TEAM</div>
+                        </div>
+                        <div class="collection-arrow">›</div>
+                    </div>
+                    <div class="chapter-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">112</div>
+                            <div class="stat-label">GOALS</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">58</div>
+                            <div class="stat-label">ASSISTS</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">TROPHIES</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter-card miami">
+                    <div class="chapter-header">
+                        <div class="chapter-icon">🦩</div>
+                        <div class="chapter-info">
+                            <div class="chapter-name">MIAMI</div>
+                            <div class="chapter-years">2023-PRESENT • THE FINAL CHAPTER</div>
+                        </div>
+                        <div class="collection-arrow">›</div>
+                    </div>
+                    <div class="chapter-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">34</div>
+                            <div class="stat-label">GOALS</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">ASSISTS</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">TROPHIES</div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- THE GOAT SCREEN -->
+            <div id="goat" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="hero-banner">
+                    <div class="hero-emoji">🐐🔥</div>
+                    <div class="hero-title">THE GOAT</div>
+                    <div class="hero-subtitle">LIONEL MESSI COLLECTION</div>
+                </div>
+                
+                <div class="section-header">MESSI COLLECTIONS</div>
+                
+                <div class="collections-grid">
+                    <div class="collection-tile yellow" onclick="navigateTo('bam')">
+                        <div class="tile-icon">🐐</div>
+                        <div class="tile-title">B.A.M.</div>
+                        <div class="tile-subtitle">3 Chapters</div>
+                    </div>
+                    
+                    <div class="collection-tile red" onclick="navigateTo('mmm')">
+                        <div class="tile-icon">🔥</div>
+                        <div class="tile-title">M.M.M.</div>
+                        <div class="tile-subtitle">Magic Moments</div>
+                    </div>
+                    
+                    <div class="collection-tile blue">
+                        <div class="tile-icon">📊</div>
+                        <div class="tile-title">STATS</div>
+                        <div class="tile-subtitle">All Records</div>
+                    </div>
+                    
+                    <div class="collection-tile green" onclick="navigateTo('fifa')">
+                        <div class="tile-icon">🎮</div>
+                        <div class="tile-title">FIFA</div>
+                        <div class="tile-subtitle">EA Sports</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">🏆 CAREER HIGHLIGHTS</div>
+                
+                <div class="content-card">
+                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                        <div style="font-size: 11px; color: #000; opacity: 0.8; letter-spacing: 1px; margin-bottom: 8px;">🏆 LEGENDARY NUMBERS</div>
+                        <div class="stats-grid">
+                            <div>
+                                <div style="font-size: 28px; font-weight: 700; color: #000;">818</div>
+                                <div style="font-size: 10px; color: #000; opacity: 0.7;">GOALS</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 28px; font-weight: 700; color: #000;">379</div>
+                                <div style="font-size: 10px; color: #000; opacity: 0.7;">ASSISTS</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 28px; font-weight: 700; color: #000;">45</div>
+                                <div style="font-size: 10px; color: #000; opacity: 0.7;">TROPHIES</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 28px; font-weight: 700; color: #000;">8</div>
+                                <div style="font-size: 10px; color: #000; opacity: 0.7;">BALLONS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">EXPLORE MORE</div>
+                
+                <div class="info-card">
+                    <div class="info-icon">⚽</div>
+                    <div class="info-content">
+                        <div class="info-title">GREATEST GOALS</div>
+                        <div class="info-text">Most iconic moments</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-content">
+                        <div class="info-title">FREE KICK MASTER</div>
+                        <div class="info-text">89 free kick goals</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="info-card" onclick="navigateTo('gear')">
+                    <div class="info-icon">👕</div>
+                    <div class="info-content">
+                        <div class="info-title">MESSI GEAR</div>
+                        <div class="info-text">Official #10 merch</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- PLAYOFFS SCREEN -->
+            <div id="playoffs" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #E63946 0%, #C62828 100%); border-radius: 20px; padding: 32px 24px; text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🏆🔥🏆</div>
+                    <div style="font-size: 32px; font-weight: 700; color: #fff; letter-spacing: 4px; margin-bottom: 8px;">PLAYOFFS</div>
+                    <div style="font-size: 11px; color: #fff; letter-spacing: 2px; opacity: 0.9;">ROAD TO MLS CUP 2025</div>
+                </div>
+                
+                <div class="section-header">🏆 PLAYOFF JOURNEY</div>
+                
+                <div class="content-card">
+                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                        <div style="font-size: 12px; font-weight: 700; color: #000; margin-bottom: 12px;">🏆 OUR PATH TO GLORY</div>
+                        <div style="display: flex; justify-content: space-around; align-items: center;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <div style="width: 60px; height: 60px; background: #50C878; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 8px;">✓</div>
+                                <div style="font-size: 11px; color: #000; font-weight: 700;">ROUND 1</div>
+                            </div>
+                            <div style="width: 40px; height: 2px; background: #000; opacity: 0.2;"></div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <div style="width: 60px; height: 60px; background: #50C878; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 8px;">✓</div>
+                                <div style="font-size: 11px; color: #000; font-weight: 700;">SEMIS</div>
+                            </div>
+                            <div style="width: 40px; height: 2px; background: #000; opacity: 0.2;"></div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <div style="width: 60px; height: 60px; background: rgba(0,0,0,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 8px;">⚡</div>
+                                <div style="font-size: 11px; color: #000; font-weight: 700;">FINAL</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">PLAYOFF MATCHES</div>
+                
+                <div class="content-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 2px solid #50C878;">
+                    <div style="display: inline-block; background: #50C878; color: #000; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">CONFERENCE SEMIFINAL</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: 16px; font-weight: 700; color: #fff;">MIAMI</div>
+                        <div style="font-size: 28px; font-weight: 700; color: #50C878;">3 - 1</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #fff;">COLUMBUS</div>
+                    </div>
+                    <div style="display: inline-block; background: #50C878; color: #000; font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 6px; margin-top: 12px;">WIN</div>
+                </div>
+                
+                <div class="content-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 2px solid #50C878;">
+                    <div style="display: inline-block; background: #50C878; color: #000; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">ROUND ONE</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: 16px; font-weight: 700; color: #fff;">MIAMI</div>
+                        <div style="font-size: 28px; font-weight: 700; color: #50C878;">2 - 1</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #fff;">ATLANTA</div>
+                    </div>
+                    <div style="display: inline-block; background: #50C878; color: #000; font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 6px; margin-top: 12px;">WIN</div>
+                </div>
+                
+                <div class="section-header">🔥 ICONIC MOMENTS</div>
+                
+                <div class="info-card">
+                    <div class="info-icon">⚽</div>
+                    <div class="info-content">
+                        <div class="info-title">Messi Free Kick Winner</div>
+                        <div class="info-text">89' vs Columbus • Conference SF</div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🔥</div>
+                    <div class="info-content">
+                        <div class="info-title">Suárez Playoff Brace</div>
+                        <div class="info-text">2 goals • Round One vs Atlanta</div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🧤</div>
+                    <div class="info-content">
+                        <div class="info-title">Callender Penalty Save</div>
+                        <div class="info-text">120' • Kept us alive in shootout</div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- ARCHIVE SCREEN -->
+            <div id="archive" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="content-card" style="background: #1a1a1a; border: 1px solid #3a3a3a; padding: 16px; margin-bottom: 24px;">
+                    <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                        <div style="width: 60px; height: 60px; background: #2a2a2a; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">⚽</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px;">VS COLUMBUS • FREE KICK</div>
+                            <div style="font-size: 12px; color: #999;">You: 89th minute winner! Pure magic from the GOAT 🐐</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">SHARE WITH</div>
+                
+                <div class="share-grid">
+                    <div class="share-option">
+                        <div class="share-icon">👥</div>
+                        <div class="share-label">FAMILY</div>
+                    </div>
+                    <div class="share-option">
+                        <div class="share-icon">🌍</div>
+                        <div class="share-label">PUBLIC</div>
+                    </div>
+                    <div class="share-option">
+                        <div class="share-icon">💬</div>
+                        <div class="share-label">MESSAGE</div>
+                    </div>
+                    <div class="share-option">
+                        <div class="share-icon">📱</div>
+                        <div class="share-label">SOCIAL</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">SAVE TO</div>
+                
+                <div class="collection-item" onclick="navigateTo('messi-collection')">
+                    <div class="collection-icon">🐐</div>
+                    <div class="collection-info">
+                        <div class="collection-title">MESSI COLLECTION</div>
+                        <div class="collection-subtitle">31 items • Your favorite moments</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-icon">⚽</div>
+                    <div class="collection-info">
+                        <div class="collection-title">GOALS COLLECTION</div>
+                        <div class="collection-subtitle">24 items • All the bangers</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-icon">📚</div>
+                    <div class="collection-info">
+                        <div class="collection-title">YOUR ARCHIVE</div>
+                        <div class="collection-subtitle">847 moments • Forever saved</div>
+                    </div>
+                    <div class="collection-arrow">›</div>
+                </div>
+                
+                <div class="action-buttons">
+                    <div class="action-button">
+                        <div class="action-button-icon">💾</div>
+                        <div class="action-button-label">SAVE</div>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-button-icon">🔗</div>
+                        <div class="action-button-label">COPY LINK</div>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-button-icon">⬇️</div>
+                        <div class="action-button-label">DOWNLOAD</div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- MESSI COLLECTION SCREEN -->
+            <div id="messi-collection" class="screen">
+                <div class="back-button" onclick="navigateTo('highlights')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="hero-banner">
+                    <div class="hero-emoji">🐐</div>
+                    <div class="hero-title">MESSI</div>
+                    <div class="hero-subtitle">31 ITEMS IN COLLECTION</div>
+                </div>
+                
+                <div class="section-header">BROWSE COLLECTION</div>
+                
+                <div class="collections-grid">
+                    <div class="collection-tile red">
+                        <div class="collection-count">NEW</div>
+                        <div class="tile-icon">⚽</div>
+                        <div class="tile-title">FREE KICK GOAL</div>
+                        <div class="tile-subtitle">vs Columbus • 89th minute winner</div>
+                    </div>
+                    
+                    <div class="collection-tile red">
+                        <div class="collection-count">5</div>
+                        <div class="tile-icon">🎯</div>
+                        <div class="tile-title">ASSIST MAGIC</div>
+                        <div class="tile-subtitle">vs Atlanta • Perfect through ball</div>
+                    </div>
+                    
+                    <div class="collection-tile yellow">
+                        <div class="tile-icon">🏃</div>
+                        <div class="tile-title">SOLO RUN</div>
+                        <div class="tile-subtitle">vs Orlando • Beat 4 defenders</div>
+                    </div>
+                    
+                    <div class="collection-tile yellow">
+                        <div class="tile-icon">⭐</div>
+                        <div class="tile-title">HAT-TRICK</div>
+                        <div class="tile-subtitle">vs Orlando • First ever at stadium</div>
+                    </div>
+                    
+                    <div class="collection-tile green">
+                        <div class="tile-icon">🍀</div>
+                        <div class="tile-title">KEY • NAPKIN</div>
+                        <div class="tile-subtitle">Barcelona contract moment</div>
+                    </div>
+                    
+                    <div class="collection-tile green">
+                        <div class="tile-icon">🎮</div>
+                        <div class="tile-title">TEAM PLAY</div>
+                        <div class="tile-subtitle">Tiki-taka perfection</div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- GEAR SCREEN -->
+            <div id="gear" class="screen">
+                <div class="back-button" onclick="navigateTo('goat')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="hero-banner">
+                    <div class="hero-emoji">👕</div>
+                    <div class="hero-title">GEAR SHOP</div>
+                    <div class="hero-subtitle">OFFICIAL 2025 COLLECTION</div>
+                </div>
+                
+                <div class="section-header">2025 KITS</div>
+                
+                <div class="gear-grid">
+                    <div class="gear-item">
+                        <div class="gear-badge">NEW</div>
+                        <div class="gear-image">👕</div>
+                        <div class="gear-name">EUFORIA HOME KIT 2025</div>
+                        <div class="gear-desc">Home • Light Pink</div>
+                        <div class="gear-price">$129</div>
+                    </div>
+                    
+                    <div class="gear-item">
+                        <div class="gear-badge">NEW</div>
+                        <div class="gear-image">👕</div>
+                        <div class="gear-name">FORTITUDE AWAY KIT 2025</div>
+                        <div class="gear-desc">Away • Black</div>
+                        <div class="gear-price">$129</div>
+                    </div>
+                    
+                    <div class="gear-item">
+                        <div class="gear-image">👕</div>
+                        <div class="gear-name">THIRD KIT MIAMI BLUE</div>
+                        <div class="gear-desc">Miami Blue</div>
+                        <div class="gear-price">$109</div>
+                    </div>
+                    
+                    <div class="gear-item">
+                        <div class="gear-image">👕</div>
+                        <div class="gear-name">MESSI #10 JERSEY</div>
+                        <div class="gear-desc">Euforia Jersey</div>
+                        <div class="gear-price">$149</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">ACCESSORIES</div>
+                
+                <div class="gear-grid">
+                    <div class="gear-item">
+                        <div class="gear-image">🧢</div>
+                        <div class="gear-name">SNAPBACK HAT 2025</div>
+                        <div class="gear-desc">Black/Pink</div>
+                        <div class="gear-price">$39</div>
+                    </div>
+                    
+                    <div class="gear-item">
+                        <div class="gear-image">🎮</div>
+                        <div class="gear-name">FUNKO POP! MESSI</div>
+                        <div class="gear-desc">Messi Figure</div>
+                        <div class="gear-price">$15</div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🏪</div>
+                    <div class="info-content">
+                        <div class="info-title">VISIT TEAM STORE</div>
+                        <div class="info-text">Chase Stadium • Mon-Fri 10AM-5PM</div>
+                    </div>
+                    <div style="background: #FFB3D9; color: #000; font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 8px;">SHOP</div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- FIFA SCREEN -->
+            <div id="fifa" class="screen">
+                <div class="back-button" onclick="navigateTo('goat')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #50C878 0%, #40B368 100%); border-radius: 20px; padding: 32px 24px; text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🎮</div>
+                    <div style="font-size: 32px; font-weight: 700; color: #fff; letter-spacing: 4px; margin-bottom: 8px;">EA SPORTS FC</div>
+                    <div style="font-size: 11px; color: #fff; letter-spacing: 2px; opacity: 0.9;">MESSI IN THE GAME</div>
+                </div>
+                
+                <div class="section-header">FC 25 RATING</div>
+                
+                <div class="content-card">
+                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 24px; text-align: center;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                            <div style="background: rgba(0,0,0,0.1); color: #000; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 6px;">🏆 ICON</div>
+                            <div style="background: rgba(0,0,0,0.1); color: #000; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 6px;">RW • CAM</div>
+                        </div>
+                        <div style="font-size: 72px; font-weight: 700; color: #000; margin-bottom: 8px;">93</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #000;">OVERALL RATING</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">KEY ATTRIBUTES</div>
+                
+                <div class="stats-grid">
+                    <div class="stat-box" style="border: 2px solid #50C878;">
+                        <div class="stat-value" style="color: #50C878;">94</div>
+                        <div class="stat-label">DRIBBLING</div>
+                    </div>
+                    <div class="stat-box" style="border: 2px solid #50C878;">
+                        <div class="stat-value" style="color: #50C878;">92</div>
+                        <div class="stat-label">PASSING</div>
+                    </div>
+                    <div class="stat-box" style="border: 2px solid #50C878;">
+                        <div class="stat-value" style="color: #50C878;">89</div>
+                        <div class="stat-label">SHOOTING</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">🎮 GAMING COMMUNITY</div>
+                
+                <div class="content-card">
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 11px; color: #999; letter-spacing: 1px; margin-bottom: 8px;">🎮 MESSI GAMERS</div>
+                        <div class="stats-grid">
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700; color: #FFB3D9;">2.4M</div>
+                                <div style="font-size: 10px; color: #999;">PLAYERS</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700; color: #FFB3D9;">847K</div>
+                                <div style="font-size: 10px; color: #999;">SQUADS</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700; color: #FFB3D9;">158K</div>
+                                <div style="font-size: 10px; color: #999;">CLIPS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">SHARE YOUR GAMEPLAY</div>
+                
+                <div class="grid-2">
+                    <div class="tile">
+                        <div class="tile-icon">📁</div>
+                        <div class="tile-title">UPLOAD CLIP</div>
+                        <div class="tile-subtitle">Share your best goals</div>
+                    </div>
+                    
+                    <div class="tile">
+                        <div class="tile-icon">🏆</div>
+                        <div class="tile-title">MY SQUAD</div>
+                        <div class="tile-subtitle">Show your team</div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- LA FAMILIA SCREEN -->
+            <div id="familia" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div class="hero-banner">
+                    <div class="hero-emoji">👥💖👥</div>
+                    <div class="hero-title">LA FAMILIA</div>
+                    <div class="hero-subtitle">WE ARE ONE • TOGETHER WE RISE</div>
+                </div>
+                
+                <div class="section-header">OUR SUPPORTER GROUPS</div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🛡️</div>
+                    <div class="info-content">
+                        <div class="info-title">THE SIEGE</div>
+                        <div class="info-text">15K+ strong • Most inclusive familia</div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🔥</div>
+                    <div class="info-content">
+                        <div class="info-title">VICE CITY 1896</div>
+                        <div class="info-text">28K followers • Latinx culture & passion</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">OUR COMMUNITY</div>
+                
+                <div class="content-card">
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 11px; color: #999; letter-spacing: 1px; margin-bottom: 16px;">🦩 TOGETHER WE STAND</div>
+                        <div class="stats-grid">
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #FFB3D9;">18M</div>
+                                <div style="font-size: 10px; color: #999;">FANS</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #FFB3D9;">500+</div>
+                                <div style="font-size: 10px; color: #999;">GROUPS</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #FFB3D9;">Global</div>
+                                <div style="font-size: 10px; color: #999;">REACH</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">WHAT WE STAND FOR</div>
+                
+                <div class="grid-2">
+                    <div class="info-card" style="flex-direction: column; text-align: center;">
+                        <div class="info-icon">🤝</div>
+                        <div class="info-title">UNITY</div>
+                        <div class="info-text">One heart, one dream</div>
+                    </div>
+                    
+                    <div class="info-card" style="flex-direction: column; text-align: center;">
+                        <div class="info-icon">💪</div>
+                        <div class="info-title">PASSION</div>
+                        <div class="info-text">Live it, breathe it</div>
+                    </div>
+                    
+                    <div class="info-card" style="flex-direction: column; text-align: center;">
+                        <div class="info-icon">⭐</div>
+                        <div class="info-title">PRIDE</div>
+                        <div class="info-text">Miami forever</div>
+                    </div>
+                    
+                    <div class="info-card" style="flex-direction: column; text-align: center;">
+                        <div class="info-icon">❤️</div>
+                        <div class="info-title">LOVE</div>
+                        <div class="info-text">More than a club</div>
+                    </div>
+                </div>
+            
+                <div class="content-spacer"></div>
+            </div>
+            
+            <!-- VICE CITY MAGIC SCREEN -->
+            <div id="vice-city" class="screen">
+                <div class="back-button" onclick="navigateTo('home')">←</div>
+                
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-text">HERONS</div>
+                        <div class="logo-subtitle">LA FAMILIA</div>
+                    </div>
+                    <div class="messi-badge">
+                        <div class="messi-number">10</div>
+                        <div class="messi-name">MESSI</div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #FFB3D9 0%, #FF8CB3 100%); border-radius: 20px; padding: 40px 24px; text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🌴🦩🌴</div>
+                    <div style="font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 4px; margin-bottom: 12px;">VICE CITY<br>MAGIC</div>
+                    <div style="font-size: 13px; color: #fff; letter-spacing: 2px; margin-bottom: 16px;">RIGHT HERE • RIGHT NOW</div>
+                    <div style="display: flex; justify-content: center; gap: 8px; margin-top: 16px;">
+                        <div style="width: 40px; height: 4px; background: #000; opacity: 0.3; border-radius: 2px;"></div>
+                        <div style="width: 40px; height: 4px; background: #000; opacity: 0.3; border-radius: 2px;"></div>
+                        <div style="width: 40px; height: 4px; background: #000; opacity: 0.3; border-radius: 2px;"></div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #E63946 0%, #C62828 100%); border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 2px;">⚽ THE GOAT IS IN MIAMI ⚽</div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="info-card" style="flex-direction: column; text-align: center; border: 2px solid #FFB3D9;">
+                        <div class="info-icon">🏠</div>
+                        <div class="info-title">HIS FAMILY</div>
+                        <div class="info-text">Living the dream in South Beach</div>
+                    </div>
+                    
+                    <div class="info-card" style="flex-direction: column; text-align: center; border: 2px solid #FFB3D9;">
+                        <div class="info-icon">🔥</div>
+                        <div class="info-title">PLAYING AMAZING</div>
+                        <div class="info-text">Still at his peak at 38</div>
+                    </div>
+                    
+                    <div class="info-card" style="flex-direction: column; text-align: center; border: 2px solid #FFB3D9;">
+                        <div class="info-icon">⏰</div>
+                        <div class="info-title">TIME LIMITED</div>
+                        <div class="info-text">Every moment is precious</div>
+                    </div>
+                    
+                    <div class="info-card" style="flex-direction: column; text-align: center; border: 2px solid #FFB3D9;">
+                        <div class="info-icon">💖</div>
+                        <div class="info-title">PURE EUFORIA</div>
+                        <div class="info-text">The magic is happening now</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <a class="tab active" onclick="setActiveTab('home')">
+                <div class="tab-icon">🏠</div>
+                <div class="tab-label">HOME</div>
+            </a>
+            <a class="tab" onclick="setActiveTab('chat')">
+                <div class="tab-icon">💬</div>
+                <div class="tab-label">CHAT</div>
+            </a>
+            <a class="tab" onclick="setActiveTab('highlights')">
+                <div class="tab-icon">⚽</div>
+                <div class="tab-label">HIGHLIGHTS</div>
+            </a>
+            <a class="tab" onclick="setActiveTab('archive')">
+                <div class="tab-icon">📚</div>
+                <div class="tab-label">ARCHIVE</div>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        let currentScreen = 'home';
+        let previousScreen = null;
+        
+        function navigateTo(screenId) {
+            if (currentScreen === screenId) return;
+            
+            const current = document.getElementById(currentScreen);
+            const next = document.getElementById(screenId);
+            
+            if (!next) return;
+            
+            // Store previous screen for back navigation
+            previousScreen = currentScreen;
+            
+            // Animate out current screen
+            current.classList.remove('active');
+            current.classList.add('out');
+            
+            // Animate in next screen
+            next.classList.remove('out');
+            next.classList.add('active');
+            
+            // Update current screen
+            currentScreen = screenId;
+            
+            // Reset scroll position
+            next.scrollTop = 0;
+            
+            // Clean up after animation
+            setTimeout(() => {
+                current.classList.remove('out');
+            }, 300);
+        }
+        
+        function setActiveTab(tabName) {
+            // Remove active from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active to clicked tab
+            event.currentTarget.classList.add('active');
+            
+            // Navigate to screen
+            navigateTo(tabName);
+        }
+        
+        // Handle back button
+        window.addEventListener('popstate', function(e) {
+            if (previousScreen) {
+                navigateTo(previousScreen);
+            }
+        });
+    </script>
+</body>
+</html>
